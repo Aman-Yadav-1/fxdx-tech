@@ -11,7 +11,7 @@ import { WebSocketMessage } from '@/types/trading';
 import { Time } from 'lightweight-charts';
 
 interface CandleData {
-  time: Time;
+  time: number;
   open: number;
   high: number;
   low: number;
@@ -38,42 +38,41 @@ export default function TradingPage() {
 
   const fetchInitialCandleData = async () => {
     try {
-      console.log('Fetching candle data...');
       const response = await fetch('https://api.hyperliquid.xyz/info', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: "candlesnapshot",
-          coin: "BTC",
-          interval: selectedInterval,
-          startTime: Math.floor((Date.now() - 24 * 60 * 60 * 1000) / 1000),
-          endTime: Math.floor(Date.now() / 1000)
-        }),
+          type: "candleSnapshot",
+          req: {
+            coin: "BTC",
+            interval: "15m",
+            startTime: Date.now() - (24 * 60 * 60 * 1000),
+            endTime: Date.now()
+          }
+        })
       });
-        
+  
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`API Error: ${response.status}`);
       }
-      
-      const result = await response.json();
-      console.log('API Response:', result);
-      
-      const formattedData = result.map((candle: any) => ({
-        time: Math.floor(candle.t / 1000) as Time,
+  
+      const data = await response.json();
+      const formattedData = Array.isArray(data) ? data.map((candle: any) => ({
+        time: candle.t,
         open: parseFloat(candle.o),
         high: parseFloat(candle.h),
         low: parseFloat(candle.l),
         close: parseFloat(candle.c),
-        volume: parseFloat(candle.v),
-      }));
-      
-      console.log('Formatted Data:', formattedData);
+        volume: parseFloat(candle.v)
+      })) : [];
+  
       setCandleData(formattedData);
     } catch (error) {
-      console.log('Raw API Error:', error);
+      console.error('Failed to fetch candle data:', error);
       setCandleData([]);
     }
   };
+  
   
   useEffect(() => {
     fetchInitialCandleData();
@@ -108,7 +107,7 @@ export default function TradingPage() {
             selectedInterval={selectedInterval}
             onIntervalChange={setSelectedInterval}
           />
-          <PriceChart />
+          <PriceChart data={candleData} />
         </div>
         <div className="flex flex-col gap-4">
           <OrderBook orderBook={orderBook} />
