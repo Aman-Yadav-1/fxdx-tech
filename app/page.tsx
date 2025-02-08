@@ -7,6 +7,7 @@ import PriceChart from '@/components/PriceChart';
 import { OrderBook } from '@/components/OrderBook';
 import { TradingControls } from '@/components/TradingControls';
 import { WebSocketManager } from '@/lib/websocket';
+import { WebSocketMessage } from '@/types/trading';
 import { Time } from 'lightweight-charts';
 
 interface CandleData {
@@ -37,46 +38,56 @@ export default function TradingPage() {
 
   const fetchInitialCandleData = async () => {
     try {
+      console.log('Fetching candle data...');
       const response = await fetch('https://api.hyperliquid.xyz/info', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: "candleSnapshot",
+          type: "candlesnapshot",
           coin: "BTC",
           interval: selectedInterval,
-          startTime: Date.now() - 24 * 60 * 60 * 1000,
+          startTime: Math.floor((Date.now() - 24 * 60 * 60 * 1000) / 1000),
+          endTime: Math.floor(Date.now() / 1000)
         }),
       });
+        
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       
-      const data = await response.json();
-      const formattedData = data.map((candle: any) => ({
-        time: candle.time as Time,
-        open: parseFloat(candle.open),
-        high: parseFloat(candle.high),
-        low: parseFloat(candle.low),
-        close: parseFloat(candle.close),
-        volume: parseFloat(candle.volume),
+      const result = await response.json();
+      console.log('API Response:', result);
+      
+      const formattedData = result.map((candle: any) => ({
+        time: Math.floor(candle.t / 1000) as Time,
+        open: parseFloat(candle.o),
+        high: parseFloat(candle.h),
+        low: parseFloat(candle.l),
+        close: parseFloat(candle.c),
+        volume: parseFloat(candle.v),
       }));
       
+      console.log('Formatted Data:', formattedData);
       setCandleData(formattedData);
     } catch (error) {
-      console.error('Failed to fetch candle data:', error);
+      console.log('Raw API Error:', error);
+      setCandleData([]);
     }
   };
-
+  
   useEffect(() => {
     fetchInitialCandleData();
     
     wsManager.connect((message) => {
-      if (message.channel === 'l2Book') {
+      if (message.type === 'l2Book' && message.data?.levels) {
         const [bids, asks] = message.data.levels;
         setOrderBook({
-          bids: bids.map((bid: any) => ({
+          bids: bids.map((bid) => ({
             price: bid.px,
             size: bid.sz,
             total: bid.n
           })),
-          asks: asks.map((ask: any) => ({
+          asks: asks.map((ask) => ({
             price: ask.px,
             size: ask.sz,
             total: ask.n
@@ -93,7 +104,7 @@ export default function TradingPage() {
       <Header />
       <div className="grid grid-cols-4 gap-4 p-4">
         <div className="col-span-3 flex flex-col gap-4">
-          <TimeSelector 
+          <TimeSelector
             selectedInterval={selectedInterval}
             onIntervalChange={setSelectedInterval}
           />

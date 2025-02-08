@@ -22,6 +22,22 @@ export interface CandleData {
 }
 
 export interface WebSocketMessage {
-  channel: string;
-  data: any;
-}
+    type: string;
+    data?: {
+      bids?: [number, number][];
+      asks?: [number, number][];
+      levels?: [Array<{
+        px: string;
+        sz: string;
+        n: number;
+      }>, Array<{
+        px: string;
+        sz: string;
+        n: number;
+      }>];
+    };
+    coin?: string;
+    timestamp?: number;
+    channel?: string;
+  }
+  
