@@ -1,3 +1,5 @@
+import { Time } from 'lightweight-charts';
+
 export interface L2BookData {
   bids: OrderBookEntry[];
   asks: OrderBookEntry[];
@@ -9,8 +11,9 @@ export interface OrderBookEntry {
   total: number;
 }
 
+
 export interface CandleData {
-  timestamp: number;
+  time: Time;
   open: number;
   high: number;
   low: number;
