@@ -13,12 +13,12 @@ export interface OrderBookEntry {
 
 
 export interface CandleData {
-  time: Time;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
+    time: Time;      // Time from lightweight-charts library
+    open: number;    // Opening price
+    high: number;    // Highest price
+    low: number;     // Lowest price
+    close: number;   // Closing price
+    volume: number;  // Trading volume
 }
 
 export interface WebSocketMessage {

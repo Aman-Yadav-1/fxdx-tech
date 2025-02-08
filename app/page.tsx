@@ -97,7 +97,7 @@ export default function TradingPage() {
             selectedInterval={selectedInterval}
             onIntervalChange={setSelectedInterval}
           />
-          <PriceChart data={candleData} />
+          <PriceChart />
         </div>
         <div className="flex flex-col gap-4">
           <OrderBook orderBook={orderBook} />
