@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slider": "^1.2.3",
     "@radix-ui/react-slot": "^1.1.2",
     "@types/d3-format": "^3.0.4",
     "@types/d3-scale": "^4.0.9",

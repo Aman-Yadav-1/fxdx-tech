@@ -1,37 +1,34 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Maximize2, Settings, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { 
+  Maximize2, 
+  Settings, 
+  LineChart, 
+  Crosshair, 
+  ChevronDown 
+} from 'lucide-react';
 
-interface ChartToolsProps {
-  className?: string;
+interface ToolButtonProps {
+  icon: React.ElementType;
 }
 
-export const ChartTools: React.FC<ChartToolsProps> = ({ className }) => {
-  return (
-    <div className={cn("absolute left-2 top-2 flex flex-col gap-1", className)}>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="p-1.5 hover:bg-gray-800 rounded-md"
-      >
-        <Maximize2 className="w-4 h-4 text-gray-400" />
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="p-1.5 hover:bg-gray-800 rounded-md"
-      >
-        <Settings className="w-4 h-4 text-gray-400" />
-      </Button>
-      <Button 
-        variant="ghost" 
-        size="sm" 
-        className="p-1.5 hover:bg-gray-800 rounded-md"
-      >
-        <ChevronDown className="w-4 h-4 text-gray-400" />
-      </Button>
-    </div>
-  );
-};
+const ToolButton: React.FC<ToolButtonProps> = ({ icon: Icon }) => (
+  <Button 
+    variant="ghost" 
+    size="sm" 
+    className="h-8 w-8 p-0 hover:bg-gray-800 rounded-md"
+  >
+    <Icon className="h-4 w-4 text-gray-400" />
+  </Button>
+);
+
+export const ChartTools: React.FC = () => (
+  <div className="absolute left-2 top-2 flex flex-col gap-1 z-10">
+    <ToolButton icon={Maximize2} />
+    <ToolButton icon={Settings} />
+    <ToolButton icon={LineChart} />
+    <ToolButton icon={Crosshair} />
+    <div className="h-px bg-gray-800 my-1" />
+    <ToolButton icon={ChevronDown} />
+  </div>
+);
