@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { BarChart2 } from 'lucide-react';
@@ -13,12 +12,12 @@ export const TimeSelector: React.FC<TimeSelectorProps> = ({
   onIntervalChange
 }) => (
   <div className="flex gap-2 text-sm text-gray-400 p-2 bg-gray-900">
-    {['5m', '15m', '1h', '4h', 'D'].map((interval) => (
+    {['5m', '15m', '1h', '4h', 'D', '1W', '1M'].map((interval) => (
       <Button
         key={interval}
         variant="ghost"
         size="sm"
-        className={interval === selectedInterval ? 'text-white' : ''}
+        className={interval === selectedInterval ? 'text-white bg-gray-800' : ''}
         onClick={() => onIntervalChange(interval)}
       >
         {interval}

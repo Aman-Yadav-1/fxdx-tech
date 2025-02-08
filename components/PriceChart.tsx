@@ -1,62 +1,86 @@
-import React from 'react';
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer
-} from 'recharts';
-import { Card } from './ui/card';
+import dynamic from 'next/dynamic';
+import { CandleData } from '@/types/trading';
+import { ApexOptions } from 'apexcharts';
+
+const Chart = dynamic(() => import('react-apexcharts'), { 
+  ssr: false,
+  loading: () => <div className="w-full h-[600px] bg-gray-900" />
+});
 
 interface PriceChartProps {
-  data: {
-    time: number;
-    open: number;
-    high: number;
-    low: number;
-    close: number;
-    volume: number;
-  }[];
+  data: CandleData[];
 }
 
 const PriceChart: React.FC<PriceChartProps> = ({ data }) => {
+  const chartOptions: ApexOptions = {
+    chart: {
+      type: 'candlestick' as const,
+      height: 600,
+      background: '#111827',
+      foreColor: '#d1d5db',
+      toolbar: {
+        show: true,
+        tools: {
+          download: false,
+          selection: true,
+          zoom: true,
+          zoomin: true,
+          zoomout: true,
+          pan: true,
+        }
+      }
+    },
+    grid: {
+      borderColor: '#1f2937',
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: true } }
+    },
+    plotOptions: {
+      candlestick: {
+        colors: {
+          upward: '#10b981',
+          downward: '#ef4444'
+        }
+      }
+    },
+    xaxis: {
+      type: 'datetime',
+      labels: {
+        style: { colors: '#6b7280' },
+        datetimeFormatter: {
+          year: 'yyyy',
+          month: "MMM 'yy",
+          day: 'dd MMM',
+          hour: 'HH:mm'
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        formatter: (value: number) => `$${value.toFixed(2)}`,
+        style: { colors: '#6b7280' }
+      }
+    },
+    theme: { mode: 'dark' }
+  };
+
+  const series = [{
+    name: 'BTC/USD',
+    data: data.map(candle => ({
+      x: new Date(candle.time),
+      y: [candle.open, candle.high, candle.low, candle.close]
+    }))
+  }];
+
   return (
-    <Card className="w-full h-[600px] bg-gray-900 p-4">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data}>
-          <defs>
-            <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
-          <XAxis 
-            dataKey="time" 
-            stroke="#6b7280"
-            tickFormatter={(time) => new Date(time).toLocaleTimeString()}
-          />
-          <YAxis 
-            stroke="#6b7280"
-            domain={['auto', 'auto']}
-            tickFormatter={(value) => `${value.toLocaleString()}`}
-          />
-          <Tooltip 
-            contentStyle={{ backgroundColor: '#1f2937', border: 'none' }}
-            labelStyle={{ color: '#d1d5db' }}
-          />
-          <Area
-            type="monotone"
-            dataKey="close"
-            stroke="#10b981"
-            fillOpacity={1}
-            fill="url(#colorPrice)"
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </Card>
+    <div className="w-full h-[600px] bg-gray-900">
+      <Chart
+        options={chartOptions}
+        series={series}
+        type="candlestick"
+        height={600}
+      />
+    </div>
   );
 };
 
