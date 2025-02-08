@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
 import { TimeSelector } from '@/components/TimeSelector';
 import PriceChart from '@/components/PriceChart';
+import VolumeBarChart from '@/components/VolumeBarChart';
 import { OrderBook } from '@/components/OrderBook';
 import { TradingControls } from '@/components/TradingControls';
 import { WebSocketManager } from '@/lib/websocket';
@@ -75,6 +76,7 @@ export default function TradingPage() {
       <div className="flex flex-1 min-h-0">
         {/* Left Side - Chart Area */}
         <div className="flex flex-col flex-[3] min-w-0 border-r border-gray-800">
+          <VolumeBarChart data={candleData} />
           <TimeSelector
             selectedInterval={selectedInterval}
             onIntervalChange={setSelectedInterval}
@@ -84,19 +86,17 @@ export default function TradingPage() {
           </div>
         </div>
 
-{/* Right Side Panel */}
-<div className="flex w-[600px] min-w-[600px]">
-  {/* OrderBook */}
-  <div className="flex-[2] h-full">
-    <OrderBook orderBook={orderBook} className="h-full" />
-  </div>
-  {/* Trading Controls */}
-  <div className="flex-[1] border-l border-gray-800">
-    <TradingControls />
-  </div>
-</div>
-
-
+        {/* Right Side Panel */}
+        <div className="flex w-[600px] min-w-[600px]">
+          {/* OrderBook */}
+          <div className="flex-[2] h-full">
+            <OrderBook orderBook={orderBook} className="h-full" />
+          </div>
+          {/* Trading Controls */}
+          <div className="flex-[1] border-l border-gray-800">
+            <TradingControls />
+          </div>
+        </div>
       </div>
     </div>
   );

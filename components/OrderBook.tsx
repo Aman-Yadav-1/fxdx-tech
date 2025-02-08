@@ -104,14 +104,15 @@ export const OrderBook: React.FC<OrderBookProps> = ({ orderBook, className }) =>
         </div>
 
         <div className="flex-1 overflow-auto scrollbar-thin">
+          {/* Asks (Sell) Section - Red */}
           <div className="space-y-0.5">
-            {asks.slice(0, 15).reverse().map((ask, i) => (
+            {asks.slice(0, 15).map((ask, i) => (
               <div key={i} className="grid grid-cols-3 text-xs relative px-2 py-0.5 hover:bg-gray-800/50">
                 <div 
                   className="absolute right-0 h-full" 
                   style={{ 
                     width: `${(ask.total / maxTotal) * 100}%`,
-                    background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%)'
+                    background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0.1) 100%)'
                   }}
                 />
                 <span className="text-red-400 z-10 font-mono">{formatNumber(ask.price)}</span>
@@ -123,21 +124,23 @@ export const OrderBook: React.FC<OrderBookProps> = ({ orderBook, className }) =>
             ))}
           </div>
 
+          {/* Spread Section */}
           <div className="text-center py-2 text-sm font-medium border-y border-gray-800 my-1">
             <span className="text-gray-400">Spread: </span>
             <span className="text-gray-300">{formatNumber(Number(asks[0]?.price || 0) - Number(bids[0]?.price || 0))}</span>
           </div>
 
+          {/* Bids (Buy) Section - Green */}
           <div className="space-y-0.5">
             {bids.slice(0, 15).map((bid, i) => (
               <div key={i} className="grid grid-cols-3 text-xs relative px-2 py-0.5 hover:bg-gray-800/50">
                 <div 
-                  className="absolute right-0 h-full" 
-                  style={{ 
-                    width: `${(bid.total / maxTotal) * 100}%`,
-                    background: 'linear-gradient(90deg, rgba(22, 163, 74, 0.25) 0%, rgba(22, 163, 74, 0.1) 100%)'
-                  }}
-                />
+  className="absolute right-0 h-full" 
+  style={{ 
+    width: `${(bid.total / maxTotal) * 100}%`,
+    background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.5) 0%, rgba(34, 197, 94, 0.2) 100%)'
+  }}
+/>
                 <span className="text-green-500 z-10 font-mono">{formatNumber(bid.price)}</span>
                 <span className="text-right z-10 font-mono">
                   {displayUnit === 'BTC' ? formatNumber(bid.size) : formatNumber(Number(bid.size) * Number(bid.price))}
