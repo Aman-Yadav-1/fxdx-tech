@@ -1,3 +1,12 @@
+export interface CandleData {
+  timestamp: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+}
+
 export const API_BASE_URL = 'https://api.hyperliquid.xyz';
 
 export async function fetchCandleData(
