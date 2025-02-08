@@ -66,34 +66,35 @@ export const OrderBook: React.FC<OrderBookProps> = ({ orderBook, className }) =>
       <div className="p-4 flex-1 flex flex-col">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-sm font-medium text-gray-200">Order Book</h2>
-          <Button variant="ghost" size="sm" className="p-1 hover:bg-gray-800">
-            <ArrowUpDown className="w-4 h-4 text-gray-400" />
-          </Button>
-        </div>
-
-        <div className="flex justify-center gap-2 mb-4">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className={cn(
-              "text-xs px-3 py-1 rounded",
-              displayUnit === 'BTC' ? "bg-gray-800 text-white" : "text-gray-400"
-            )}
-            onClick={() => setDisplayUnit('BTC')}
-          >
-            BTC
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className={cn(
-              "text-xs px-3 py-1 rounded",
-              displayUnit === 'USD' ? "bg-gray-800 text-white" : "text-gray-400"
-            )}
-            onClick={() => setDisplayUnit('USD')}
-          >
-            USD
-          </Button>
+          <div className="flex items-center gap-2">
+            <div className="flex bg-gray-800 rounded-lg p-0.5">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={cn(
+                  "text-xs px-3 py-1 rounded",
+                  displayUnit === 'BTC' ? "bg-gray-700 text-white" : "text-gray-400"
+                )}
+                onClick={() => setDisplayUnit('BTC')}
+              >
+                BTC
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className={cn(
+                  "text-xs px-3 py-1 rounded",
+                  displayUnit === 'USD' ? "bg-gray-700 text-white" : "text-gray-400"
+                )}
+                onClick={() => setDisplayUnit('USD')}
+              >
+                USD
+              </Button>
+            </div>
+            <Button variant="ghost" size="sm" className="p-1 hover:bg-gray-800">
+              <ArrowUpDown className="w-4 h-4 text-gray-400" />
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-3 text-xs text-gray-400 mb-2 px-2">
@@ -107,7 +108,7 @@ export const OrderBook: React.FC<OrderBookProps> = ({ orderBook, className }) =>
             {asks.slice(0, 15).reverse().map((ask, i) => (
               <div key={i} className="grid grid-cols-3 text-xs relative px-2 py-0.5 hover:bg-gray-800/50">
                 <div 
-                  className="absolute right-0 h-full bg-red-500/20" 
+                  className="absolute right-0 h-full" 
                   style={{ 
                     width: `${(ask.total / maxTotal) * 100}%`,
                     background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%)'
@@ -131,13 +132,13 @@ export const OrderBook: React.FC<OrderBookProps> = ({ orderBook, className }) =>
             {bids.slice(0, 15).map((bid, i) => (
               <div key={i} className="grid grid-cols-3 text-xs relative px-2 py-0.5 hover:bg-gray-800/50">
                 <div 
-                  className="absolute right-0 h-full bg-green-500/20" 
+                  className="absolute right-0 h-full" 
                   style={{ 
                     width: `${(bid.total / maxTotal) * 100}%`,
-                    background: 'linear-gradient(90deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%)'
+                    background: 'linear-gradient(90deg, rgba(22, 163, 74, 0.25) 0%, rgba(22, 163, 74, 0.1) 100%)'
                   }}
                 />
-                <span className="text-green-400 z-10 font-mono">{formatNumber(bid.price)}</span>
+                <span className="text-green-500 z-10 font-mono">{formatNumber(bid.price)}</span>
                 <span className="text-right z-10 font-mono">
                   {displayUnit === 'BTC' ? formatNumber(bid.size) : formatNumber(Number(bid.size) * Number(bid.price))}
                 </span>
